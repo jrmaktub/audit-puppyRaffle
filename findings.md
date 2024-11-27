@@ -88,3 +88,26 @@ Place the followinng test into `PuppyRaffleTest.t.sol`
 2. Consider using a mapping to check for duplicates. This would allow constant time lookup of whether a user has already entered.
 
 Use OZ Enumerable library.
+
+# Gas
+
+## [G-1] unchanged state variable should be declared constant or immutable
+
+
+
+## [I-1]: Solidity pragma should be specific, not wide
+
+Consider using a specific version of Solidity in your contracts instead of a wide version. For example, instead of `pragma solidity ^0.8.0;`, use `pragma solidity 0.8.0;`
+
+<details><summary>1 Found Instances</summary>
+
+
+- Found in src/PuppyRaffle.sol [Line: 2](src/PuppyRaffle.sol#L2)
+
+	```solidity
+	pragma solidity ^0.7.6;
+	```
+
+</details>
+
+ ## [I-1]: Solidity pragma should be specific, not wide

@@ -89,6 +89,7 @@ contract PuppyRaffle is ERC721, Ownable {
 
         // Check for duplicates
         //@audit DoS
+        //@audit -gas uint256 playerLength = players.length
         for (uint256 i = 0; i < players.length - 1; i++) {
             for (uint256 j = i + 1; j < players.length; j++) {
                 require(players[i] != players[j], "PuppyRaffle: Duplicate player");
@@ -106,10 +107,11 @@ contract PuppyRaffle is ERC721, Ownable {
         require(playerAddress == msg.sender, "PuppyRaffle: Only the player can refund");
         require(playerAddress != address(0), "PuppyRaffle: Player already refunded, or is not active");
         
-        //Q @audit Reentrancy - making external call before we change state
+        // @audit Reentrancy - making external call before we change state
         payable(msg.sender).sendValue(entranceFee);
 
         players[playerIndex] = address(0);
+        // @audit low 
         emit RaffleRefunded(playerAddress);
     }
 
@@ -191,14 +193,12 @@ contract PuppyRaffle is ERC721, Ownable {
 
     /// @notice this function will withdraw the fees to the feeAddress
     function withdrawFees() external {
-        // ... ?
-        // q of so if the protocol has players someone can't withdraw?
-        // @audit is it difficult to withdraw?
+        // @audit is it difficult to withdraw if there are players (MEV) ?
         // @audit mishandling ETH!
         require(address(this).balance == uint256(totalFees), "PuppyRaffle: There are currently players active!");
         uint256 feesToWithdraw = totalFees;
         totalFees = 0;
-        // q what if the feeAddress is a smart contract with a fallback that will fail?
+        // slither-disable-next-line arbitrary-send-eth
         (bool success,) = feeAddress.call{value: feesToWithdraw}("");
         require(success, "PuppyRaffle: Failed to withdraw fees");
     }
