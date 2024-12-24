@@ -107,7 +107,7 @@ This is more than 3x more expensive
 
 <summmary>PoC</summary>
 
-Place the followinng test into `PuppyRaffleTest.t.sol` :
+Place the followinng test into `PuppyRaffleTest.t.sol` ::
 
 ```javascript
     function test_denialOfService() public {
